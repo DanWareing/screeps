@@ -2,13 +2,10 @@ var roleHarvester = require("role.harvester");
 var roleUpgrader = require("role.upgrader");
 var roleBuilder = require("role.builder");
 var roleColoniser = require("role.coloniser");
+var garbageCollector = require("util.garbage");
 
 module.exports.loop = function() {
-  for (var name in Memory.creeps) {
-    if (!Game.creeps[name]) {
-      delete Memory.creeps[name];
-    }
-  }
+  garbageCollector.run();
 
   var harvesters = _.filter(
     Game.creeps,
@@ -25,7 +22,7 @@ module.exports.loop = function() {
     Game.creeps,
     creep => creep.memory.role == "upgrader"
   );
-  if (upgraders.length < 5) {
+  if (upgraders.length < 6) {
     var newName = "Upgrader" + Game.time;
     Game.spawns["Spawn1"].spawnCreep([WORK, CARRY, MOVE], newName, {
       memory: { role: "upgrader" }
@@ -33,7 +30,7 @@ module.exports.loop = function() {
   }
 
   var builders = _.filter(Game.creeps, creep => creep.memory.role == "builder");
-  if (builders.length < 0) {
+  if (builders.length < 3) {
     var newName = "Builder" + Game.time;
     Game.spawns["Spawn1"].spawnCreep([WORK, CARRY, MOVE], newName, {
       memory: { role: "builder" }
