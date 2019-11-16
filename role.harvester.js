@@ -1,13 +1,10 @@
+var actions = require("actions");
+
 var roleHarvester = {
   /** @param {Creep} creep **/
   run: function(creep) {
     if (creep.store.getFreeCapacity() > 0) {
-      var nearestSource = creep.pos.findClosestByRange(FIND_SOURCES_ACTIVE);
-      if (creep.harvest(nearestSource) == ERR_NOT_IN_RANGE) {
-        creep.moveTo(nearestSource, {
-          visualizePathStyle: { stroke: "#ffaa00" }
-        });
-      }
+      actions.harvest(creep);
     } else {
       var targets = creep.room.find(FIND_STRUCTURES, {
         filter: structure => {

@@ -5,6 +5,14 @@ var roleColoniser = require("role.coloniser");
 var garbageCollector = require("util.garbage");
 
 module.exports.loop = function() {
+  const hostiles = Game.spawns["Spawn1"].room.controller.pos.findInRange(
+    FIND_HOSTILE_CREEPS,
+    100
+  );
+  if (hostiles.length > 0) {
+    Game.spawns["Spawn1"].room.controller.activateSafeMode();
+  }
+
   garbageCollector.run();
 
   var harvesters = _.filter(
@@ -22,7 +30,7 @@ module.exports.loop = function() {
     Game.creeps,
     creep => creep.memory.role == "upgrader"
   );
-  if (upgraders.length < 6) {
+  if (upgraders.length < 5) {
     var newName = "Upgrader" + Game.time;
     Game.spawns["Spawn1"].spawnCreep([WORK, CARRY, MOVE], newName, {
       memory: { role: "upgrader" }
@@ -30,7 +38,7 @@ module.exports.loop = function() {
   }
 
   var builders = _.filter(Game.creeps, creep => creep.memory.role == "builder");
-  if (builders.length < 3) {
+  if (builders.length < 8) {
     var newName = "Builder" + Game.time;
     Game.spawns["Spawn1"].spawnCreep([WORK, CARRY, MOVE], newName, {
       memory: { role: "builder" }
